@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const Restricted = ({ type, allowed, children, fallback }) => {
-  if (allowed.include(type)) {
+  if (allowed.includes(type)) {
     return children;
   }
   return fallback ? fallback : null;
