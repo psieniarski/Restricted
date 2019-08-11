@@ -1,20 +1,35 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Restricted = ({ type, allowed, children, fallback }) => {
-  if (allowed.includes(type)) {
+const isBoolean = value => {
+  return typeof value === 'boolean';
+};
+
+export const everyValidator = validators => {
+  return validators.every(validator => {
+    if (isBoolean(validator)) {
+      return validator;
+    }
+    return validator();
+  });
+};
+
+const Restricted = ({ validators, children, fallback }) => {
+  const allowed = everyValidator(validators);
+
+  if (allowed) {
     return children;
   }
+
   return fallback ? fallback : null;
 };
 
 Restricted.PropTypes = {
-  type: PropTypes.string.isRequired,
-  allowed: PropTypes.array.isRequired,
+  validators: PropTypes.arrayOf(PropTypes.func, PropTypes.bool).isRequired,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
-  ]).isRequired,
+  ]),
   fallback: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
