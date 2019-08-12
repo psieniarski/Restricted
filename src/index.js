@@ -14,18 +14,15 @@ export const everyValidator = validators => {
   });
 };
 
-const Restricted = ({ validators, children, fallback }) => {
-  const allowed = everyValidator(validators);
-
-  if (allowed) {
+const Restricted = ({ show, children, fallback = null }) => {
+  if (show) {
     return children;
   }
-
-  return fallback ? fallback : null;
+  return fallback;
 };
 
-Restricted.PropTypes = {
-  validators: PropTypes.arrayOf(PropTypes.func, PropTypes.bool).isRequired,
+Restricted.propTypes = {
+  show: PropTypes.bool.isRequired,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
